@@ -1,0 +1,1280 @@
+
+/* =========================================
+   1. GLOBAL
+========================================= */
+.amui-container,
+.amui-container * {
+  box-sizing: border-box;
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+}
+
+.amui-container {
+  --amui-orange: #ed7135;
+  --amui-orange-dark: #d9572d;
+  --amui-cream: #fff7ef;
+  --amui-text: #382920;
+  --amui-muted: #89796e;
+
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #fffaf5;
+  color: var(--amui-text);
+}
+
+/* =========================================
+   2. MAP
+========================================= */
+.amui-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.amui-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  font-family: Arial, sans-serif;
+}
+
+.amui-map .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.amui-map .leaflet-popup-content {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* GPS */
+.amui-map-overlay {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 17px;
+  border-radius: 30px;
+  background: white;
+  color: #39815b;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.amui-map-overlay::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #35b875;
+  box-shadow: 0 0 0 5px rgba(53, 184, 117, 0.15);
+}
+
+
+/* =========================================
+   3. TOP RIGHT CONTROLS - MODERN TOOLBAR
+========================================= */
+
+.amui-top-right-controls {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  z-index: 600;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 17px;
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+
+  box-shadow: 0 6px 25px rgba(44, 31, 23, 0.13);
+}
+
+/* Các nút chung */
+
+.amui-back-floating,
+.amui-tour-btn,
+.amui-lang-floating {
+  height: 43px;
+  min-height: 43px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 11px;
+  white-space: nowrap;
+
+  font-family: "Be Vietnam Pro", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* ĐĂNG XUẤT */
+
+.amui-back-floating {
+  padding: 0 16px;
+
+  border: 1px solid #f3dfd2;
+  background: #fff4ec;
+  color: #d9572d;
+
+  box-shadow: none;
+}
+
+.amui-back-floating:hover {
+  background: #ed7135;
+  color: white;
+  border-color: #ed7135;
+  transform: translateY(-2px);
+}
+
+/* TOUR */
+
+.amui-tour-btn {
+  padding: 0 19px;
+
+  border: 1px solid #ed7135;
+  background: linear-gradient(135deg, #f28b4c, #d9572d);
+  color: white;
+
+  box-shadow: 0 4px 12px rgba(217, 87, 45, 0.22);
+}
+
+.amui-tour-btn:hover {
+  background: linear-gradient(135deg, #e97538, #c94925);
+  box-shadow: 0 6px 16px rgba(217, 87, 45, 0.3);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   4. LANGUAGE BUTTON
+========================================= */
+
+.amui-lang-floating {
+  position: relative;
+
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+  padding: 0 13px;
+
+  border: 1px solid #eee3da;
+  background: #ffffff;
+  color: #49372c;
+
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+.amui-lang-floating:hover {
+  border-color: #edaa83;
+  background: #fffaf6;
+  transform: translateY(-2px);
+}
+
+/* Mã ngôn ngữ */
+
+.amui-lang-floating span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 27px;
+  height: 27px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: #fff0e5;
+  color: #d9572d;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+/* Tên ngôn ngữ */
+
+.amui-lang-floating strong {
+  display: inline-block;
+
+  color: #49372c;
+  font-size: 12px;
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+/* Mũi tên */
+
+.amui-lang-arrow {
+  color: #89796e;
+  font-size: 15px;
+  font-style: normal;
+  margin-left: 2px;
+}
+
+/* DROPDOWN */
+
+.amui-lang-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 2000;
+
+  width: 175px;
+  max-height: 250px;
+  overflow-y: auto;
+
+  padding: 7px;
+
+  border: 1px solid #f0e4d9;
+  border-radius: 14px;
+
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  animation: amui-dropdown-show 0.2s ease;
+}
+
+.amui-lang-item {
+  padding: 11px 13px;
+  border-radius: 9px;
+
+  color: #65554b;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.amui-lang-item:hover,
+.amui-lang-item.active {
+  background: #fff0e5;
+  color: #d9572d;
+}
+
+@keyframes amui-dropdown-show {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   5. BOTTOM INFORMATION PANEL
+   PANEL LUÔN NẰM SÁT DƯỚI MÀN HÌNH
+========================================= */
+.amui-panel {
+  position: absolute !important;
+
+  /* Cố định sát đáy */
+  top: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+
+  /* Chiếm toàn bộ chiều ngang */
+  width: 100% !important;
+  max-width: none !important;
+
+  /* Kích thước đầy đủ */
+  height: 440px;
+  max-height: none !important;
+  min-height: 0;
+
+  padding: 24px 28px 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+
+  background: rgba(255, 250, 245, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 24px 24px 0 0;
+
+  box-shadow: 0 -8px 35px rgba(44, 31, 23, 0.16);
+  backdrop-filter: blur(16px);
+
+  z-index: 900;
+
+  /* Không tạo thanh cuộn */
+  overflow: hidden;
+
+  transform: translateY(0);
+  transition: height 0.35s ease, transform 0.35s ease;
+}
+
+/* PANEL MỞ */
+.amui-panel.expanded {
+  height: 440px !important;
+  bottom: 0 !important;
+  top: auto !important;
+  transform: translateY(0) !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* PANEL THU NHỎ */
+.amui-panel.collapsed {
+  height: 76px !important;
+  bottom: 0 !important;
+  top: auto !important;
+  overflow: hidden;
+  transform: translateY(0) !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* =========================================
+   6. PANEL HEADER
+========================================= */
+.amui-panel-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-shrink: 0;
+
+  min-height: 70px;
+  padding: 0 0 13px;
+
+  border-bottom: 1px solid #eee2d6;
+}
+
+.amui-panel-header::before {
+  content: "SAIGON FOOD EXPERIENCE";
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 7px 12px;
+  border-radius: 7px;
+  background: #fff0e4;
+  color: var(--amui-orange-dark);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.amui-panel-header h2 {
+  margin: 0;
+  color: #382920;
+  font-family: Georgia, serif;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.amui-panel-header p {
+  margin: 7px 0 0;
+  color: var(--amui-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================
+   7. LANGUAGES
+========================================= */
+.amui-languages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.amui-languages button {
+  padding: 8px 14px;
+  border: 1px solid #eaded2;
+  border-radius: 30px;
+  background: white;
+  color: #82746a;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.amui-languages button:hover {
+  border-color: var(--amui-orange);
+  color: var(--amui-orange-dark);
+}
+
+.amui-languages button.amui-active {
+  border-color: var(--amui-orange);
+  background: var(--amui-orange);
+  color: white;
+  box-shadow: 0 3px 10px rgba(237, 113, 53, 0.2);
+}
+
+/* =========================================
+   8. DESCRIPTION
+========================================= */
+.amui-description {
+  flex: 1;
+  min-height: 65px;
+  margin: 0;
+  padding: 14px 17px;
+
+  border-left: 3px solid var(--amui-orange);
+  border-radius: 0 12px 12px 0;
+
+  background: #fff2e8;
+  color: #69584c;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.8;
+
+  /* Hiển thị đầy đủ, không tạo thanh cuộn */
+  max-height: none;
+  overflow: visible;
+  white-space: normal;
+}
+
+/* =========================================
+   9. AUDIO PLAYER
+========================================= */
+.amui-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 15px;
+
+  min-height: 58px;
+  margin: 0;
+  padding: 10px 15px;
+
+  border: 1px solid #eee2d6;
+  border-radius: 13px;
+  background: white;
+}
+
+.amui-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #77685e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.amui-status::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #a9a39c;
+}
+
+.amui-player button {
+  margin-left: 6px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 9px;
+  background: #fff0e4;
+  color: var(--amui-orange-dark);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.amui-player button:hover {
+  background: var(--amui-orange);
+  color: white;
+}
+
+/* =========================================
+   10. NOW PLAYING
+========================================= */
+.amui-playing {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+
+  margin: 0;
+  padding: 10px 15px;
+
+  border-radius: 11px;
+  background: #392a22;
+  color: white;
+}
+
+.amui-playing span {
+  color: #ffb77e;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+}
+
+.amui-playing strong {
+  display: block;
+  color: #f7e9dd;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  /* Không giới hạn số dòng */
+  overflow: visible;
+  white-space: normal;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+}
+
+/* =========================================
+   11. START BUTTON
+========================================= */
+.amui-start-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 15px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: linear-gradient(135deg, #f28b4c, #d9572d);
+  color: white;
+
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+
+  box-shadow: 0 5px 15px rgba(217, 83, 44, 0.2);
+  transition: 0.25s;
+}
+
+.amui-start-btn:hover {
+  background: linear-gradient(135deg, #e97538, #c94925);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   12. TOUR MODAL
+========================================= */
+.amui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+  background: rgba(35, 26, 21, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.amui-modal-box {
+  width: 420px;
+  max-width: 100%;
+  padding: 38px 30px;
+
+  border-radius: 23px;
+  background: linear-gradient(145deg, #fffaf3, #fff0e3);
+  text-align: center;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+  animation: amui-modal-show 0.3s ease;
+}
+
+.amui-modal-box h2 {
+  margin: 0;
+  color: #39271e;
+  /* font-family: Georgia, serif; */
+  font-size: 25px;
+  line-height: 1.5;
+}
+
+.amui-modal-box::before {
+  content: "🍜";
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: #ffe6d3;
+  font-size: 35px;
+}
+
+.amui-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.amui-btn {
+  flex: 1;
+  padding: 13px 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.amui-btn.yes {
+  background: var(--amui-orange);
+  color: white;
+}
+
+.amui-btn.no {
+  background: white;
+  border: 1px solid #ead9ca;
+  color: #77665a;
+}
+
+.amui-btn:hover {
+  transform: translateY(-3px);
+}
+
+@keyframes amui-modal-show {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================
+   13. TOUR SIDEBAR
+========================================= */
+.amui-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(35, 26, 21, 0.4);
+  backdrop-filter: blur(3px);
+}
+
+.amui-tour-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 430px;
+  max-width: 90%;
+  height: 100%;
+  padding: 25px;
+
+  background: #fffaf4;
+  box-shadow: 10px 0 35px rgba(0, 0, 0, 0.15);
+
+  transform: translateX(-105%);
+  transition: transform 0.35s ease;
+  z-index: 9999;
+}
+
+.amui-tour-sidebar.open {
+  transform: translateX(0);
+}
+
+.amui-tour-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee2d6;
+}
+
+.amui-tour-header h3 {
+  margin: 0;
+  color: #38271e;
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.amui-tour-header h3::before {
+  content: "🍜 ";
+}
+
+.amui-tour-header button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #fff0e5;
+  color: var(--amui-orange-dark);
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.amui-tour-header button:hover {
+  background: var(--amui-orange);
+  color: white;
+}
+
+.amui-tour-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 4px 10px 0;
+}
+
+.amui-tour-item {
+  margin-bottom: 14px;
+  padding: 19px;
+  border: 1px solid #eee1d5;
+  border-radius: 16px;
+  background: white;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.amui-tour-item::before {
+  content: "FOOD TOUR";
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #fff0e4;
+  color: var(--amui-orange-dark);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.amui-tour-item b {
+  display: block;
+  margin-bottom: 8px;
+  color: #392a21;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.amui-tour-item p {
+  margin: 0;
+  color: #89796e;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.amui-tour-item:hover {
+  border-color: #ed9a69;
+  background: #fff8f0;
+  transform: translateX(4px);
+  box-shadow: 0 5px 18px rgba(90, 55, 30, 0.08);
+}
+
+/* =========================================
+   14. RESPONSIVE
+========================================= */
+@media (max-width: 900px) {
+  .amui-panel {
+    height: 460px;
+    padding: 20px;
+  }
+
+  .amui-panel.expanded {
+    height: 460px !important;
+  }
+
+  .amui-top-right-controls {
+    right: 12px;
+    gap: 7px;
+  }
+}
+
+@media (max-width: 600px) {
+  .amui-map-overlay {
+    top: 12px;
+    left: 12px;
+    padding: 9px 12px;
+    font-size: 10px;
+  }
+
+  .amui-top-right-controls {
+    top: 60px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  .amui-back-floating,
+  .amui-tour-btn,
+  .amui-lang-floating {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 10px;
+  }
+
+  .amui-panel,
+  .amui-panel.expanded {
+    height: 480px !important;
+    padding: 16px;
+    gap: 10px;
+    border-radius: 19px 19px 0 0;
+  }
+
+  .amui-panel.collapsed {
+    height: 68px !important;
+  }
+
+  .amui-panel-header {
+    min-height: 62px;
+  }
+
+  .amui-panel-header h2 {
+    font-size: 20px;
+  }
+
+  .amui-panel-header::before {
+    font-size: 8px;
+  }
+
+  .amui-languages {
+    gap: 5px;
+  }
+
+  .amui-languages button {
+    padding: 7px 10px;
+    font-size: 9px;
+  }
+
+  .amui-description {
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  .amui-player {
+    min-height: 50px;
+    padding: 8px;
+  }
+
+  .amui-player button {
+    padding: 8px 10px;
+    font-size: 9px;
+  }
+
+  .amui-playing {
+    padding: 8px 10px;
+  }
+
+  .amui-playing strong {
+    font-size: 10px;
+  }
+
+  .amui-start-btn {
+    min-height: 40px;
+  }
+
+  .amui-tour-sidebar {
+    width: 340px;
+    padding: 18px;
+  }
+
+  .amui-modal-box {
+    padding: 30px 20px;
+  }
+
+  .amui-modal-box h2 {
+    font-size: 21px;
+  }
+}
+
+
+
+/* =========================================
+   15. RESPONSIVE TOP TOOLBAR
+========================================= */
+
+@media (max-width: 600px) {
+  .amui-top-right-controls {
+    top: 12px;
+    right: 10px;
+
+    gap: 5px;
+    padding: 5px;
+
+    border-radius: 13px;
+  }
+
+  .amui-back-floating,
+  .amui-tour-btn,
+  .amui-lang-floating {
+    height: 37px;
+    min-height: 37px;
+
+    padding: 0 9px;
+    gap: 5px;
+
+    font-size: 10px;
+  }
+
+  .amui-lang-floating span {
+    width: 23px;
+    height: 23px;
+    font-size: 9px;
+  }
+
+  .amui-lang-floating strong {
+    font-size: 10px;
+  }
+
+  .amui-lang-arrow {
+    font-size: 12px;
+  }
+}
+
+
+
+/* =========================================
+   FIX FINAL - TOP RIGHT TOOLBAR
+   3 NÚT TÁCH BIỆT, KHÔNG CHỒNG LÊN NHAU
+========================================= */
+
+.amui-container .amui-top-right-controls {
+  position: absolute !important;
+  top: 20px !important;
+  right: 22px !important;
+  left: auto !important;
+
+  /* Sử dụng GRID thay cho FLEX */
+  display: grid !important;
+  grid-template-columns: max-content max-content max-content !important;
+  grid-template-rows: 46px !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  column-gap: 12px !important;
+  row-gap: 0 !important;
+
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: calc(100vw - 30px) !important;
+
+  padding: 7px !important;
+  margin: 0 !important;
+
+  background: rgba(255, 255, 255, 0.94) !important;
+  border: 1px solid #f0e5dc !important;
+  border-radius: 16px !important;
+
+  box-shadow: 0 5px 22px rgba(44, 31, 23, 0.13) !important;
+  backdrop-filter: blur(15px);
+
+  z-index: 2000 !important;
+  overflow: visible !important;
+}
+
+/* ÉP 3 PHẦN TỬ KHÔNG CO GIÃN */
+
+.amui-container .amui-top-right-controls > .amui-back-floating,
+.amui-container .amui-top-right-controls > .amui-lang-floating,
+.amui-container .amui-top-right-controls > .amui-tour-btn {
+  position: relative !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+
+  height: 43px !important;
+  min-height: 43px !important;
+  max-height: 43px !important;
+
+  flex: none !important;
+  flex-shrink: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 16px !important;
+
+  float: none !important;
+  transform: none;
+
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+/* NÚT ĐĂNG XUẤT */
+
+.amui-container .amui-back-floating {
+  grid-column: 1;
+  background: #fff1e8 !important;
+  color: #d9572d !important;
+  border: 1px solid #f3dfd2 !important;
+  border-radius: 11px !important;
+}
+
+/* NÚT NGÔN NGỮ */
+
+.amui-container .amui-lang-floating {
+  grid-column: 2;
+  position: relative !important;
+
+  display: inline-flex !important;
+  flex-direction: row !important;
+  gap: 9px !important;
+
+  background: white !important;
+  color: #49372c !important;
+  border: 1px solid #eee3da !important;
+  border-radius: 11px !important;
+
+  cursor: pointer;
+}
+
+/* Mã VN */
+
+.amui-container .amui-lang-floating span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 27px !important;
+  min-width: 27px !important;
+  height: 27px !important;
+
+  border-radius: 50% !important;
+  background: #fff0e5 !important;
+  color: #d9572d !important;
+}
+
+/* Tên ngôn ngữ */
+
+.amui-container .amui-lang-floating strong {
+  display: inline-block !important;
+  width: max-content !important;
+
+  font-size: 12px !important;
+  white-space: nowrap !important;
+  color: #49372c !important;
+}
+
+/* Mũi tên */
+
+.amui-container .amui-lang-arrow {
+  display: inline-block !important;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+/* NÚT TOUR */
+
+.amui-container .amui-tour-btn {
+  grid-column: 3;
+
+  background: linear-gradient(135deg, #f28b4c, #d9572d) !important;
+  color: white !important;
+
+  border: 1px solid #ed7135 !important;
+  border-radius: 11px !important;
+
+  box-shadow: 0 4px 12px rgba(217, 87, 45, 0.2) !important;
+}
+
+/* HIỆU ỨNG HOVER */
+
+.amui-container .amui-back-floating:hover {
+  background: #ed7135 !important;
+  color: white !important;
+}
+
+.amui-container .amui-lang-floating:hover {
+  border-color: #edaa83 !important;
+}
+
+.amui-container .amui-tour-btn:hover {
+  background: #c94925 !important;
+}
+
+/* DROPDOWN NGÔN NGỮ */
+
+.amui-container .amui-lang-dropdown {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  right: 0 !important;
+  left: auto !important;
+
+  width: 175px !important;
+  min-width: 175px !important;
+  max-height: 250px !important;
+
+  display: block !important;
+  overflow-y: auto !important;
+
+  padding: 7px !important;
+  background: white !important;
+  border: 1px solid #f0e4d9 !important;
+  border-radius: 13px !important;
+
+  z-index: 3000 !important;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 600px) {
+  .amui-container .amui-top-right-controls {
+    top: 12px !important;
+    right: 10px !important;
+
+    column-gap: 5px !important;
+    padding: 5px !important;
+    grid-template-rows: 38px !important;
+  }
+
+  .amui-container .amui-top-right-controls > .amui-back-floating,
+  .amui-container .amui-top-right-controls > .amui-lang-floating,
+  .amui-container .amui-top-right-controls > .amui-tour-btn {
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 8px !important;
+    font-size: 10px !important;
+  }
+
+  .amui-container .amui-lang-floating span {
+    width: 22px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+  }
+}
+
+/* ----------------- CSS THANH LOADING ---------------------- */
+/* ============================= */
+/* AUDIO PLAYING PROGRESS */
+/* ============================= */
+
+.amui-playing {
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+/* Header */
+.amui-playing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.amui-playing-header span {
+  font-size: 12px;
+  font-weight: 800;
+  color: #2563eb;
+  letter-spacing: 1px;
+}
+
+.amui-playing-header small {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+/* Nội dung */
+.amui-playing strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+
+  font-size: 13px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* Thanh nền */
+.amui-progress {
+  width: 100%;
+  height: 6px;
+  margin-top: 16px;
+  background: #dbeafe;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* Thanh chạy */
+.amui-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    #0f62fe,
+    #06b6d4,
+    #22c55e
+  );
+
+  border-radius: 20px;
+
+  transition: width 0.2s linear;
+}
+
+/* Khi đang đọc */
+.amui-playing.playing .amui-playing-header span {
+  animation: audioPulse 1.2s infinite;
+}
+
+@keyframes audioPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}

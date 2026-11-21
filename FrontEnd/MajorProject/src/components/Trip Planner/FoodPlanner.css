@@ -1,0 +1,775 @@
+/* ==========================
+   Reset
+========================== */
+
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+} */
+
+/* Cố định trang Food AI trong màn hình */
+.food-ai-page {
+    width: 100%;
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 18px;
+}
+
+/* Giữ khung chat có thanh cuộn riêng */
+.food-ai-chatbox {
+    height: 560px;
+    min-height: 0;
+    max-height: 560px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+/* .food-ai-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 18px;
+} */
+
+.food-ai-title {
+    margin-bottom: 18px;
+}
+
+.food-ai-title p {
+    color: #777;
+    font-size: 15px;
+}
+
+
+/* ==========================
+   Layout
+========================== */
+
+.food-ai-layout {
+    display: flex;
+    gap: 22px;
+    align-items: stretch;
+}
+
+
+/* ==========================
+   Chat
+========================== */
+
+.food-ai-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==========================
+   Khung chat
+========================== */
+
+.food-ai-chatbox {
+    flex: 1;
+    min-height: 560px;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.food-ai-center {
+    width: 100%;
+    text-align: center;
+    padding: 40px;
+}
+
+
+/* ==========================
+   AI
+========================== */
+
+.food-ai-icon {
+    width: 42px;
+    height: 42px;
+    background: #173a7a;
+    color: white;
+    border-radius: 50%;
+    margin: auto;
+    margin-bottom: 18px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.food-ai-center h2 {
+    font-size: 29px;
+    margin-bottom: 28px;
+    color: #333;
+}
+
+
+/* ==========================
+   Gợi ý
+========================== */
+
+.food-ai-suggest {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.food-ai-suggest button {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid #dddddd;
+    background: white;
+    cursor: pointer;
+    transition: .25s;
+    font-size: 15px;
+}
+
+.food-ai-suggest button:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+
+/* ==========================
+   Input
+========================== */
+
+.food-ai-message {
+    display: flex;
+    margin-top: 14px;
+    gap: 10px;
+}
+
+.food-ai-message input {
+    flex: 1;
+    height: 48px;
+
+    border-radius: 8px;
+    border: 1px solid #ddd;
+
+    padding: 0 16px;
+    font-size: 15px;
+    outline: none;
+}
+
+.food-ai-message input:focus {
+    border-color: #173a7a;
+}
+
+.food-ai-message button {
+    width: 90px;
+    border: none;
+    border-radius: 8px;
+    background: #d98b84;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.food-ai-message button:hover {
+    background: #c76b62;
+}
+
+
+/* ==========================
+   Note
+========================== */
+
+.food-ai-note {
+    margin-top: 10px;
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* ==========================
+   Sidebar
+========================== */
+
+.food-ai-filter {
+    width: 300px;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.food-ai-filter h3 {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+
+/* ==========================
+   Option
+========================== */
+
+.food-ai-option {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.food-ai-option label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.food-ai-option select {
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0 12px;
+    outline: none;
+    cursor: pointer;
+    background: white;
+}
+
+
+/* ==========================
+   Tags
+========================== */
+
+.food-ai-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.food-ai-tags button {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    transition: .25s;
+    font-size: 14px;
+}
+
+.food-ai-tags button:hover {
+    background: #173a7a;
+    color: white;
+    border-color: #173a7a;
+}
+
+
+/* ==========================
+   Nút AI
+========================== */
+
+.food-ai-search {
+    margin-top: auto;
+    height: 48px;
+    border: none;
+    border-radius: 8px;
+    background: #c8462d;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.food-ai-search:hover {
+    background: #b43a23;
+}
+
+
+/* ==========================
+   Responsive
+========================== */
+
+@media (max-width:1000px) {
+
+    .food-ai-layout {
+        flex-direction: column;
+    }
+
+    .food-ai-filter {
+        width: 100%;
+    }
+
+}
+
+@media (max-width:650px) {
+
+    .food-ai-chatbox {
+        min-height: 420px;
+    }
+
+    .food-ai-center h2 {
+        font-size: 22px;
+    }
+
+    .food-ai-message {
+        flex-direction: column;
+    }
+
+    .food-ai-message button {
+        width: 100%;
+        height: 48px;
+    }
+
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* Chat Box */
+
+/* .food-ai-chatbox{
+    flex:1;
+    background:white;
+    border:1px solid #e4e4e4;
+    border-radius:14px;
+
+    padding:22px;
+
+    overflow-y:auto;
+
+    min-height:560px;
+} */
+
+
+/* .food-ai-chatbox {
+    height: 560px;
+    min-height: 560px;
+    max-height: 560px;
+
+    background: white;
+    border: 1px solid #e4e4e4;
+    border-radius: 14px;
+
+    padding: 22px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+} */
+
+
+.food-ai-chatbox {
+    width: 100%;
+    height: 560px;
+    min-height: 560px;
+    max-height: 560px;
+
+    background: white;
+    border: 1px solid #e4e4e4;
+    border-radius: 14px;
+
+    padding: 22px;
+
+    /* Cho phép cuộn toàn bộ lịch sử tin nhắn */
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* Không căn giữa nội dung */
+    display: block;
+
+    /* Giữ kích thước khung chat */
+    flex-shrink: 0;
+}
+/* scrollbar */
+
+.food-ai-chatbox::-webkit-scrollbar{
+    width:8px;
+}
+
+.food-ai-chatbox::-webkit-scrollbar-thumb{
+    background:#d8d8d8;
+    border-radius:20px;
+}
+
+
+/* conversation */
+
+.food-ai-conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+}
+
+
+/* row */
+
+.food-ai-row{
+    display:flex;
+    width:100%;
+
+        flex-shrink: 0;
+
+}
+
+.food-ai-row-left{
+    justify-content:flex-start;
+}
+
+.food-ai-row-right{
+    justify-content:flex-end;
+}
+
+
+/* avatar */
+
+.food-ai-avatar{
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:#183f86;
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-weight:bold;
+
+    margin-right:12px;
+
+    flex-shrink:0;
+
+}
+
+
+/* bubble */
+
+.food-ai-bubble{
+
+    max-width:72%;
+
+    padding:16px 18px;
+
+    border-radius:18px;
+
+    line-height:1.7;
+
+    position:relative;
+
+    word-break:break-word;
+
+}
+
+
+/* AI */
+
+.food-ai-bubble-ai{
+
+    background:#f5f6fa;
+    border:1px solid #ececec;
+
+}
+
+
+/* USER */
+
+.food-ai-bubble-user{
+
+    background:#cf5b42;
+    color:white;
+
+}
+
+
+/* text */
+
+.food-ai-bubble p{
+    margin-bottom:8px;
+}
+
+.food-ai-bubble ul{
+
+    margin-left:18px;
+    margin-top:10px;
+
+}
+
+.food-ai-bubble li{
+    margin:6px 0;
+}
+
+
+/* time */
+
+.food-ai-bubble span{
+
+    display:block;
+
+    margin-top:10px;
+
+    font-size:12px;
+
+    opacity:.6;
+
+}
+
+
+/* Thanh cuộn khung chat */
+.food-ai-chatbox::-webkit-scrollbar {
+    width: 7px;
+}
+
+.food-ai-chatbox::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 20px;
+}
+
+.food-ai-chatbox::-webkit-scrollbar-thumb {
+    background: #b8c9d8;
+    border-radius: 20px;
+}
+
+.food-ai-chatbox::-webkit-scrollbar-thumb:hover {
+    background: #789bb8;
+}
+
+/* Firefox */
+.food-ai-chatbox {
+    scrollbar-width: thin;
+    scrollbar-color: #b8c9d8 #f1f1f1;
+}
+/* .food-ai-conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+    min-height: 100%;
+} */
+ .food-ai-conversation {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    gap: 22px;
+    width: 100%;
+
+    /* Chiều cao tự tăng theo số lượng tin nhắn */
+    min-height: 100%;
+    height: auto;
+}
+
+
+/* ================================
+   FOOD TOUR ITINERARY
+================================ */
+
+.food-ai-itinerary {
+  margin-top: 18px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.food-ai-itinerary-header h3 {
+  margin: 0 0 8px;
+  color: #1d4ed8;
+  font-size: 18px;
+}
+
+.food-ai-itinerary-header p {
+  margin: 0 0 15px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.food-ai-itinerary-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.food-ai-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.food-ai-summary-item span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.food-ai-summary-item strong {
+  color: #0f172a;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.food-ai-itinerary-time {
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  background: #eff6ff;
+  border-radius: 8px;
+  color: #1e40af;
+  font-size: 13px;
+}
+
+.food-ai-stop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.food-ai-stop-item {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.food-ai-stop-number {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.food-ai-stop-content {
+  flex: 1;
+  min-width: 0;
+  padding: 13px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.food-ai-stop-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.food-ai-stop-heading strong {
+  color: #1e40af;
+  font-size: 14px;
+}
+
+.food-ai-stop-time {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.food-ai-stop-content h4 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.food-ai-stop-content p {
+  margin: 5px 0;
+  color: #475569;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.food-ai-stop-content a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #2563eb;
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.food-ai-stop-content a:hover {
+  text-decoration: underline;
+}
+
+.food-ai-stop-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.food-ai-stop-details span {
+  color: #475569;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.food-ai-itinerary-footer {
+  margin-top: 16px;
+  padding: 12px;
+  background: #eff6ff;
+  border-radius: 10px;
+}
+
+.food-ai-itinerary-footer strong {
+  color: #1d4ed8;
+  font-size: 13px;
+}
+
+.food-ai-itinerary-footer p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .food-ai-itinerary {
+    padding: 12px;
+  }
+
+  .food-ai-itinerary-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .food-ai-stop-item {
+    gap: 8px;
+  }
+
+  .food-ai-stop-content {
+    padding: 10px;
+  }
+}
