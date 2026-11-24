@@ -1,10 +1,11 @@
 import "./AudioMapFreeUI.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { Circle } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { useMapEvents } from "react-leaflet";
 import { useLocation } from "react-router-dom";
+
 function MapClickHandler({ setPosition }) {
   useMapEvents({
     click(e) {
@@ -44,9 +45,11 @@ const blueIcon = new L.Icon({
 
 function RecenterMap({ position }) {
   const map = useMap();
+
   useEffect(() => {
     map.setView(position);
-  }, [position]);
+  }, [map, position]);
+
   return null;
 }
 
@@ -66,60 +69,56 @@ const langCodeMap = {
   Russian: "ru",
   Thai: "th",
 };
+const EMPTY_STOPS = [];
 
 function AudioMapAI() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const shopIdFromQR = location.state?.shopId;
 
-  // Nhận lịch trình Food Tour từ Chatbot
   const itineraryFromChat = location.state?.itinerary;
 
-  const itineraryStops = itineraryFromChat?.stops || [];
+  const itineraryStops = itineraryFromChat?.stops ?? EMPTY_STOPS;
 
-  const [isFromItinerary, setIsFromItinerary] = useState(false);
+  const isFromItinerary = itineraryStops.length > 0;
+
   const [foodTourRoute, setFoodTourRoute] = useState([]);
 
-  // 2. Khi nhận lịch trình, đưa bản đồ đến quán đầu tiên
+  // Vẽ đường đi qua đúng các quán trong Food Tour
   useEffect(() => {
-    if (!itineraryStops.length) return;
-
-    const firstStop = itineraryStops[0].foodPlace;
-
-    if (!firstStop) return;
-
-    const lat = Number(firstStop.latitude);
-    const lng = Number(firstStop.longitude);
-
-    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
-    setIsFromItinerary(true);
-
-    setPosition([lat, lng]);
-
-    // Không mở panel cửa hàng tự động của GPS
-    setSelectedShop(null);
-    setIsPanelOpen(false);
-  }, [itineraryFromChat]);
-
-  // 3. Vẽ đường đi qua đúng các quán trong Food Tour
-  useEffect(() => {
-    if (!itineraryStops.length) return;
+    setFoodTourRoute([]);
 
     if (itineraryStops.length < 2) return;
 
-    const coordinates = itineraryStops
+    const validStops = itineraryStops.filter((stop) => {
+      const place = stop.foodPlace;
+
+      return (
+        place &&
+        place.latitude != null &&
+        place.longitude != null &&
+        place.latitude !== "" &&
+        place.longitude !== "" &&
+        Number.isFinite(Number(place.latitude)) &&
+        Number.isFinite(Number(place.longitude))
+      );
+    });
+
+    if (validStops.length < 2) return;
+
+    const coordinates = validStops
       .map((stop) => {
         const place = stop.foodPlace;
 
-        return `${place.longitude},${place.latitude}`;
+        return `${Number(place.longitude)},${Number(place.latitude)}`;
       })
       .join(";");
 
     const url = `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
 
-    fetch(url)
+    const controller = new AbortController();
+
+    fetch(url, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Không thể lấy đường đi Food Tour");
@@ -128,17 +127,22 @@ function AudioMapAI() {
         return res.json();
       })
       .then((data) => {
-        if (!data.routes?.length) return;
+        if (data.code !== "Ok" || !data.routes?.length) {
+          throw new Error("OSRM không tìm thấy tuyến đường phù hợp");
+        }
 
         const coords = data.routes[0].geometry.coordinates;
 
-        setFoodTourRoute(coords.map((c) => [c[1], c[0]]));
+        setFoodTourRoute(coords.map(([lng, lat]) => [lat, lng]));
       })
       .catch((err) => {
-        console.error("Lỗi đường đi Food Tour:", err);
+        if (err.name !== "AbortError") {
+          console.error("Lỗi đường đi Food Tour:", err);
+        }
       });
-  }, [itineraryFromChat]);
 
+    return () => controller.abort();
+  }, [itineraryStops]);
   // TẤT CẢ CÁC STATE NẰM Ở ĐÂY
   // const [position, setPosition] = useState([10.761992635455506, 106.7022316837637]);
   const [position, setPosition] = useState([10.76, 106.7]);
@@ -160,6 +164,32 @@ function AudioMapAI() {
   const [displayTitle, setDisplayTitle] = useState("");
   const [displayDesc, setDisplayDesc] = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  // 2. Khi nhận lịch trình, đưa bản đồ đến quán đầu tiên
+  useEffect(() => {
+    const firstValidStop = itineraryStops.find((stop) => {
+      const place = stop.foodPlace;
+
+      return (
+        place &&
+        place.latitude != null &&
+        place.longitude != null &&
+        place.latitude !== "" &&
+        place.longitude !== "" &&
+        Number.isFinite(Number(place.latitude)) &&
+        Number.isFinite(Number(place.longitude))
+      );
+    });
+
+    if (!firstValidStop) return;
+
+    const place = firstValidStop.foodPlace;
+
+    setPosition([Number(place.latitude), Number(place.longitude)]);
+
+    setSelectedShop(null);
+    setIsPanelOpen(false);
+  }, [itineraryFromChat]);
+
   const moveStep = 0.0001;
   const moveUp = () => setPosition([position[0] + moveStep, position[1]]);
   const moveDown = () => setPosition([position[0] - moveStep, position[1]]);
@@ -167,32 +197,6 @@ function AudioMapAI() {
   const moveRight = () => setPosition([position[0], position[1] + moveStep]);
 
   const allShops = shops;
-  const shopsInRange = shops.filter(
-    (s) =>
-      getDistance(position[0], position[1], s.lat, s.lng) <= s.bankinh / 1000
-  );
-  useEffect(() => {
-    // if (isFromQR) return;
-    if (isFromItinerary || isFromQR) return;
-
-    if (!shopsInRange.length) {
-      setSelectedShop(null);
-      return;
-    }
-
-    let nearest = shopsInRange[0];
-    let minDistance = Infinity;
-
-    shopsInRange.forEach((s) => {
-      const d = getDistance(position[0], position[1], s.lat, s.lng);
-      if (d < minDistance) {
-        minDistance = d;
-        nearest = s;
-      }
-    });
-
-    setSelectedShop(nearest);
-  }, [position, shops]);
 
   const startSimulation = () => {
     if (!route.length) return;
@@ -250,39 +254,79 @@ function AudioMapAI() {
       .catch((err) => console.error(err));
   }, []);
   useEffect(() => {
-    if (!shopIdFromQR || shops.length === 0) return;
-
+    if (isFromItinerary || !shopIdFromQR || shops.length === 0) return;
     console.log("QR ID:", shopIdFromQR);
     console.log("Shops:", shops);
 
-    const foundShop = shops.find((s) => String(s.id) === shopIdFromQR);
+    const foundShop = shops.find((s) => String(s.id) === String(shopIdFromQR));
     if (foundShop) {
-      setIsFromQR(true); // ✅ phải đặt trước
+      setIsFromQR(true);
 
-      setPosition([foundShop.lat, foundShop.lng]);
+      setPosition([Number(foundShop.lat), Number(foundShop.lng)]);
+
       setSelectedShop(foundShop);
       setIsPanelOpen(true);
     } else {
       console.log("❌ Không tìm thấy shop");
     }
-  }, [shopIdFromQR, shops]);
-  // LẤY ĐƯỜNG ĐI TỪ OSRM
+  }, [shopIdFromQR, shops, isFromItinerary]); // LẤY ĐƯỜNG ĐI TỪ OSRM
+  // useEffect(() => {
+  //   if (!selectedShop || isFromQR) return;
+  //   const url = `https://router.project-project-osrm.org/route/v1/driving/${position[1]},${position[0]};${selectedShop.lng},${selectedShop.lat}?overview=full&geometries=geojson`;
+  //   fetch(url)
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error("OSRM quá tải!");
+  //       return res.json();
+  //     })
+  //     .then((data) => {
+  //       if (!data.routes?.length) return;
+  //       const coords = data.routes[0].geometry.coordinates;
+  //       setRoute(coords.map((c) => [c[1], c[0]]));
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, [selectedShop]);
+
   useEffect(() => {
-    if (!selectedShop || isFromQR) return; // 🔥 THÊM DÒNG NÀY
-    const url = `https://router.project-project-osrm.org/route/v1/driving/${position[1]},${position[0]};${selectedShop.lng},${selectedShop.lat}?overview=full&geometries=geojson`;
-    fetch(url)
+    setRoute([]);
+
+    if (!selectedShop || isFromQR || isFromItinerary) return;
+
+    const lat = Number(selectedShop.lat);
+    const lng = Number(selectedShop.lng);
+
+    if (
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng) ||
+      !Number.isFinite(position[0]) ||
+      !Number.isFinite(position[1])
+    ) {
+      return;
+    }
+
+    const url = `https://router.project-osrm.org/route/v1/driving/${position[1]},${position[0]};${lng},${lat}?overview=full&geometries=geojson`;
+
+    const controller = new AbortController();
+
+    fetch(url, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error("OSRM quá tải!");
         return res.json();
       })
       .then((data) => {
         if (!data.routes?.length) return;
-        const coords = data.routes[0].geometry.coordinates;
-        setRoute(coords.map((c) => [c[1], c[0]]));
-      })
-      .catch((err) => console.error(err));
-  }, [selectedShop]); // Không spam API OSRM nữa
 
+        const coords = data.routes[0].geometry.coordinates;
+
+        setRoute(coords.map(([lng, lat]) => [lat, lng]));
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error(err);
+        }
+      });
+
+    return () => controller.abort();
+  }, [selectedShop, position, isFromQR, isFromItinerary]);
   // TÌM QUÁN GẦN NHẤT
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
@@ -296,13 +340,31 @@ function AudioMapAI() {
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   }
 
+  const visibleShops = useMemo(() => {
+    return shops.filter((s) => {
+      const lat = Number(s.lat);
+      const lng = Number(s.lng);
+      const radius = Number(s.bankinh);
+
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng) ||
+        !Number.isFinite(radius)
+      ) {
+        return false;
+      }
+
+      return getDistance(position[0], position[1], lat, lng) <= radius / 1000;
+    });
+  }, [shops, position]);
   // const visibleShops = shops.filter((s) => getDistance(position[0], position[1], s.lat, s.lng) <= s.bankinh / 1000);
-  const visibleShops = shops.filter(
-    (s) =>
-      getDistance(position[0], position[1], s.lat, s.lng) <= s.bankinh / 1000
-  );
+  // const visibleShops = shops.filter(
+  //   (s) =>
+  //     getDistance(position[0], position[1], s.lat, s.lng) <= s.bankinh / 1000
+  // );
   useEffect(() => {
-    if (isFromQR) return; // 🔥 CHẶN
+    // if (isFromQR) return;
+    if (isFromItinerary || isFromQR) return;
 
     if (!visibleShops.length) {
       setSelectedShop(null);
@@ -325,8 +387,7 @@ function AudioMapAI() {
       setSelectedShop(nearest);
       setIsPanelOpen(true); // 👈 chỉ mở khi shop mới
     }
-  }, [position, visibleShops]);
-
+  }, [position, visibleShops, isFromItinerary, isFromQR, selectedShop]);
   const distance =
     selectedShop &&
     getDistance(position[0], position[1], selectedShop.lat, selectedShop.lng);
@@ -382,34 +443,59 @@ function AudioMapAI() {
   // LOGIC PHÁT ÂM THANH (CHỈ ĐỌC MÔ TẢ)
   // ==========================================
   const speakText = async () => {
-    if (!displayDesc || displayDesc.includes("Đang dịch")) return;
-    setIsSpeaking(true);
+    if (!displayDesc || displayDesc.includes("Đang dịch")) {
+      console.log("Không có nội dung để đọc:", displayDesc);
+      return;
+    }
 
     try {
-      const targetLangCode = langCodeMap[panelLang] || "vi";
+      // Dừng audio cũ nếu đang phát
+      if (audioObj) {
+        audioObj.pause();
+        audioObj.currentTime = 0;
+      }
 
-      // 🔥 CHỈ ĐỌC MỖI ĐOẠN MÔ TẢ ĐÃ ĐƯỢC DỊCH
-      const textToRead = displayDesc;
+      setIsSpeaking(true);
+
+      const targetLangCode = langCodeMap[panelLang] || "vi";
 
       const audioRes = await fetch(
         `http://localhost:8080/api/tts?text=${encodeURIComponent(
-          textToRead
+          displayDesc
         )}&lang=${targetLangCode}`
       );
 
-      if (!audioRes.ok) throw new Error("Backend lỗi TTS");
+      if (!audioRes.ok) {
+        throw new Error(`Backend TTS lỗi: ${audioRes.status}`);
+      }
 
       const blob = await audioRes.blob();
+
+      if (!blob.size) {
+        throw new Error("File âm thanh trả về rỗng");
+      }
+
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
+
       setAudioObj(audio);
 
-      audio.play();
-      audio.onended = () => setIsSpeaking(false);
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(url);
+      };
+
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(url);
+        console.error("Không thể phát file âm thanh");
+      };
+
+      await audio.play();
     } catch (err) {
-      console.error(err);
+      console.error("Lỗi phát âm thanh:", err);
       setIsSpeaking(false);
-      alert("Lỗi phát âm thanh!");
+      alert("Không thể phát âm thanh! Kiểm tra API TTS và Backend.");
     }
   };
 
@@ -421,20 +507,44 @@ function AudioMapAI() {
     setIsSpeaking(false);
   };
 
+  // const handleLocateUser = () => {
+  //   if (!navigator.geolocation) {
+  //     alert("Trình duyệt không hỗ trợ GPS");
+  //     return;
+  //   }
+
+  //   const watchId = navigator.geolocation.watchPosition(
+  //     (pos) => {
+  //       console.log("📍 GPS:", pos.coords);
+
+  //       setPosition([pos.coords.latitude, pos.coords.longitude]);
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //     },
+  //     {
+  //       enableHighAccuracy: true,
+  //       maximumAge: 0,
+  //       timeout: 10000,
+  //     }
+  //   );
+  // };
+
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
       alert("Trình duyệt không hỗ trợ GPS");
       return;
     }
 
-    const watchId = navigator.geolocation.watchPosition(
+    navigator.geolocation.getCurrentPosition(
       (pos) => {
-        console.log("📍 GPS:", pos.coords);
-
         setPosition([pos.coords.latitude, pos.coords.longitude]);
       },
       (err) => {
-        console.error(err);
+        console.error("Lỗi GPS:", err);
+        alert(
+          "Không thể lấy vị trí hiện tại. Hãy kiểm tra quyền truy cập GPS."
+        );
       },
       {
         enableHighAccuracy: true,
@@ -443,11 +553,24 @@ function AudioMapAI() {
       }
     );
   };
+
+  const validShops = useMemo(() => {
+    return shops.filter((s) => {
+      return (
+        s.lat != null &&
+        s.lng != null &&
+        s.lat !== "" &&
+        s.lng !== "" &&
+        Number.isFinite(Number(s.lat)) &&
+        Number.isFinite(Number(s.lng))
+      );
+    });
+  }, [shops]);
   return (
     <div className="amui-container">
       <div className="amui-map">
         {/* Bản đồ và các nút */}
-        <div className="amui-controller">
+        {/* <div className="amui-controller">
           <div></div>
           <button onClick={moveUp}>▲</button>
           <div></div>
@@ -457,7 +580,7 @@ function AudioMapAI() {
           <div></div>
           <button onClick={moveDown}>▼</button>
           <div></div>
-        </div>
+        </div> */}
         <MapContainer
           center={position}
           zoom={15}
@@ -468,45 +591,82 @@ function AudioMapAI() {
           {/* 👇 THÊM DÒNG NÀY */}
           <MapClickHandler setPosition={setPosition} />
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={position} icon={blueIcon}>
+          {/* <Marker position={position} icon={blueIcon}>
             <Popup>Vị trí bạn chọn</Popup>
-          </Marker>
+          </Marker> */}
+          {!isFromItinerary && (
+            <Marker position={position} icon={blueIcon}>
+              <Popup>Vị trí bạn chọn</Popup>
+            </Marker>
+          )}
+          {/* Nếu đang xem Food Tour thì chỉ hiển thị các quán trong lịch trình */}
           {/* Nếu đang xem Food Tour thì chỉ hiển thị các quán trong lịch trình */}
           {isFromItinerary ? (
             <>
-              {itineraryStops.map((stop, index) => {
-                const place = stop.foodPlace;
+              {itineraryStops
+                .filter((stop) => {
+                  const place = stop.foodPlace;
 
-                return (
-                  <Marker
-                    key={stop.sequence || index}
-                    position={[Number(place.latitude), Number(place.longitude)]}
-                    icon={redIcon}
-                  >
-                    <Popup>
-                      <div>
-                        <h3>
-                          {stop.sequence}. {place.name}
-                        </h3>
+                  return (
+                    place &&
+                    place.latitude != null &&
+                    place.longitude != null &&
+                    Number.isFinite(Number(place.latitude)) &&
+                    Number.isFinite(Number(place.longitude))
+                  );
+                })
+                .map((stop, index) => {
+                  const place = stop.foodPlace;
 
-                        <p>{place.address}</p>
+                  return (
+                    <Marker
+                      key={`${stop.sequence ?? index}-${place.id ?? index}`}
+                      position={[
+                        Number(place.latitude),
+                        Number(place.longitude),
+                      ]}
+                      icon={redIcon}
+                      eventHandlers={{
+                        click: () => {
+                          // Tìm thông tin quán đầy đủ từ API /api/cuahang
+                          const fullShop = shops.find(
+                            (s) => String(s.id) === String(place.id)
+                          );
 
-                        <p>{stop.visitTime}</p>
+                          console.log("Quán trong lịch trình:", place);
+                          console.log("Thông tin quán từ database:", fullShop);
 
-                        <p>
-                          Chi phí: {stop.estimatedCost?.toLocaleString("vi-VN")}{" "}
-                          VNĐ
-                        </p>
-                      </div>
-                    </Popup>
-                  </Marker>
-                );
-              })}
+                          if (fullShop) {
+                            // Ưu tiên lấy dữ liệu đầy đủ từ database
+                            setSelectedShop(fullShop);
+                          } else {
+                            // Dữ liệu dự phòng nếu chưa tìm thấy quán
+                            setSelectedShop({
+                              id: place.id,
+                              ten: place.name,
+                              moTa: place.moTa ?? place.description ?? "",
+                              lat: place.latitude,
+                              lng: place.longitude,
+                              imageBanner: place.imageBanner,
+                              ngonngu: place.ngonngu ?? "Tiếng Việt",
+                            });
+                          }
+
+                          setIsPanelOpen(true);
+                          setIsSpeaking(false);
+                        },
+                      }}
+                    />
+                  );
+                })}
             </>
           ) : (
-            allShops.map((s, index) => (
-              <React.Fragment key={index}>
-                <Marker position={[s.lat, s.lng]} icon={redIcon}>
+            validShops.map((s) => (
+              <React.Fragment key={s.id}>
+                <Marker
+                  position={[Number(s.lat), Number(s.lng)]}
+                  icon={redIcon}
+                >
                   <Popup>{s.ten}</Popup>
                 </Marker>
 
@@ -518,6 +678,13 @@ function AudioMapAI() {
               </React.Fragment>
             ))
           )}
+          {/* {isFromItinerary && foodTourRoute.length > 0 && (
+            <Polyline positions={foodTourRoute} color="#2563eb" weight={5} />
+          )}
+
+          {!isFromItinerary && route.length > 0 && (
+            <Polyline positions={route} color="blue" />
+          )}{" "} */}
           {/* Đường đi Food Tour */}
           {isFromItinerary && foodTourRoute.length > 0 && (
             <Polyline positions={foodTourRoute} color="#2563eb" weight={5} />
@@ -525,7 +692,7 @@ function AudioMapAI() {
           {/* Đường đi GPS thông thường */}
           {!isFromItinerary && route.length > 0 && (
             <Polyline positions={route} color="blue" />
-          )}{" "}
+          )}
         </MapContainer>
         <div className="amui-map-overlay">GPS đang bật</div>
         <div className="amui-bottom-right-controls" style={{ zIndex: 2000 }}>
@@ -587,7 +754,10 @@ function AudioMapAI() {
           <div className="amui-panel-header">
             <h2>{displayTitle}</h2>
             <p>
-              {distance
+              {/* {distance
+                ? `${distance.toFixed(2)} km từ vị trí của bạn`
+                : "Đang tính..."} */}
+              {distance != null
                 ? `${distance.toFixed(2)} km từ vị trí của bạn`
                 : "Đang tính..."}
             </p>

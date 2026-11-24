@@ -12,6 +12,7 @@ import MHuser from "./components/NguoiDung/AudioMapUI";
 import MHuserfree from "./components/NguoiDung/AudioMapFreeUI";
 import SettingsUI from "./components/NguoiDung/SettingsUI";
 import FoodPlanner from "./components/Trip Planner/FoodPlanner";
+import Chatbotmap from "./components/NguoiDung/AudioMapAI";
 
 export default function App() {
 	return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/mhuserfree" element={<MHuserfree />} />
 		    <Route path="/settings" element={<SettingsUI />} />
 		    <Route path="/foodplanner" element={<FoodPlanner />} />
+		    <Route path="/audio-map" element={<Chatbotmap />} />
 
 		</Routes>
 	);

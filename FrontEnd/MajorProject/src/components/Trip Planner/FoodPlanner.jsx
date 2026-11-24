@@ -1,22 +1,31 @@
-
 import { useState, useRef, useEffect } from "react";
 import "./FoodPlannerTest.css";
-
+import { useNavigate } from "react-router-dom";
 const API_URL = "http://localhost:8080/api/chat/send";
 
 // Định dạng tiền VNĐ
 const formatCurrency = (value) => {
-  if (value == null) return "Chưa xác định";
+  if (value == null || value === "" || !Number.isFinite(Number(value))) {
+    return "Chưa xác định";
+  }
 
   return `${Number(value).toLocaleString("vi-VN")} VNĐ`;
 };
 
 // Định dạng thời lượng
 const formatDuration = (minutes) => {
-  if (minutes == null) return "Chưa xác định";
+  if (
+    minutes == null ||
+    minutes === "" ||
+    !Number.isFinite(Number(minutes)) ||
+    Number(minutes) < 0
+  ) {
+    return "Chưa xác định";
+  }
 
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
+  const value = Number(minutes);
+  const hours = Math.floor(value / 60);
+  const remainingMinutes = value % 60;
 
   if (hours === 0) return `${remainingMinutes} phút`;
   if (remainingMinutes === 0) return `${hours} giờ`;
@@ -25,6 +34,12 @@ const formatDuration = (minutes) => {
 };
 
 export default function FoodPlanner() {
+  const navigate = useNavigate();
+  // navigate("/audio-map", {
+  //   state: {
+  //     itinerary: item.itinerary,
+  //   },
+  // });
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -107,8 +122,7 @@ export default function FoodPlanner() {
         {
           id: Date.now() + 1,
           role: "ai",
-          text:
-            "Xin lỗi, hiện tại mình chưa thể kết nối đến máy chủ. Bạn hãy kiểm tra Spring Boot và thử lại nhé!",
+          text: "Xin lỗi, hiện tại mình chưa thể kết nối đến máy chủ. Bạn hãy kiểm tra Spring Boot và thử lại nhé!",
           time: new Date(),
           foodPlaces: [],
           itinerary: null,
@@ -135,13 +149,40 @@ export default function FoodPlanner() {
     }
   };
 
+  const hasValidMapStops = (itinerary) =>
+    Array.isArray(itinerary?.stops) &&
+    itinerary.stops.some((stop) => {
+      const place = stop.foodPlace;
+
+      return (
+        place &&
+        place.latitude != null &&
+        place.longitude != null &&
+        place.latitude !== "" &&
+        place.longitude !== "" &&
+        Number.isFinite(Number(place.latitude)) &&
+        Number.isFinite(Number(place.longitude)) &&
+        Number(place.latitude) >= -90 &&
+        Number(place.latitude) <= 90 &&
+        Number(place.longitude) >= -180 &&
+        Number(place.longitude) <= 180
+      );
+    });
+
+  const formatPrice = (value) => {
+    if (value == null || value === "" || !Number.isFinite(Number(value))) {
+      return "?";
+    }
+
+    return Number(value).toLocaleString("vi-VN");
+  };
   return (
     <div className="food-ai-page">
       {/* Tiêu đề */}
       <div className="food-ai-title">
         <p>
-          Hỏi bằng lời của bạn, trợ lý sẽ chọn tour hợp khu vực, giờ giấc,
-          ngân sách và khẩu vị.
+          Hỏi bằng lời của bạn, trợ lý sẽ chọn tour hợp khu vực, giờ giấc, ngân
+          sách và khẩu vị.
         </p>
       </div>
 
@@ -220,9 +261,7 @@ export default function FoodPlanner() {
                             <div className="food-ai-summary-item">
                               <span>💚 Ngân sách còn lại</span>
                               <strong>
-                                {formatCurrency(
-                                  item.itinerary.remainingBudget
-                                )}
+                                {formatCurrency(item.itinerary.remainingBudget)}
                               </strong>
                             </div>
                           </div>
@@ -231,8 +270,7 @@ export default function FoodPlanner() {
                           {(item.itinerary.startTime ||
                             item.itinerary.endTime) && (
                             <div className="food-ai-itinerary-time">
-                              🕒 Thời gian:
-                              {" "}
+                              🕒 Thời gian:{" "}
                               {item.itinerary.startTime || "Chưa xác định"}
                               {" - "}
                               {item.itinerary.endTime || "Chưa xác định"}
@@ -247,7 +285,9 @@ export default function FoodPlanner() {
                               return (
                                 <div
                                   className="food-ai-stop-item"
-                                  key={`${stop.sequence ?? index}-${place?.id ?? index}`}
+                                  key={`${stop.sequence ?? index}-${
+                                    place?.id ?? index
+                                  }`}
                                 >
                                   <div className="food-ai-stop-number">
                                     {stop.sequence ?? index + 1}
@@ -275,26 +315,16 @@ export default function FoodPlanner() {
                                         )}
 
                                         {place.district && (
-                                          <p>
-                                            🏙️ Khu vực: {place.district}
-                                          </p>
+                                          <p>🏙️ Khu vực: {place.district}</p>
                                         )}
 
                                         {(place.priceMin != null ||
                                           place.priceMax != null) && (
                                           <p>
                                             💰 Giá tham khảo:{" "}
-                                            {place.priceMin != null
-                                              ? Number(
-                                                  place.priceMin
-                                                ).toLocaleString("vi-VN")
-                                              : "?"}
+                                            {formatPrice(place.priceMin)}
                                             {" - "}
-                                            {place.priceMax != null
-                                              ? Number(
-                                                  place.priceMax
-                                                ).toLocaleString("vi-VN")
-                                              : "?"}
+                                            {formatPrice(place.priceMax)}
                                             {" VNĐ"}
                                           </p>
                                         )}
@@ -324,15 +354,19 @@ export default function FoodPlanner() {
                                         {formatCurrency(stop.estimatedCost)}
                                       </span>
 
-                                      {stop.distanceFromPrevious != null && (
-                                        <span>
-                                          🚗 Khoảng cách từ điểm trước:{" "}
-                                          {Number(
-                                            stop.distanceFromPrevious
-                                          ).toLocaleString("vi-VN")}{" "}
-                                          km
-                                        </span>
-                                      )}
+                                      {stop.distanceFromPrevious != null &&
+                                        stop.distanceFromPrevious !== "" &&
+                                        Number.isFinite(
+                                          Number(stop.distanceFromPrevious)
+                                        ) && (
+                                          <span>
+                                            🚗 Khoảng cách từ điểm trước:{" "}
+                                            {Number(
+                                              stop.distanceFromPrevious
+                                            ).toLocaleString("vi-VN")}{" "}
+                                            km
+                                          </span>
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -345,63 +379,81 @@ export default function FoodPlanner() {
                               🎉 Chúc bạn có một chuyến Food Tour thật vui!
                             </strong>
                             <p>
-                              Chi phí và khoảng cách là thông tin ước tính
-                              theo dữ liệu hiện có trong hệ thống.
+                              Chi phí và khoảng cách là thông tin ước tính theo
+                              dữ liệu hiện có trong hệ thống.
                             </p>
                           </div>
+                          {hasValidMapStops(item.itinerary) && (
+                            <button
+                              type="button"
+                              className="food-ai-map-button"
+                              onClick={() => {
+                                navigate("/audio-map", {
+                                  state: {
+                                    itinerary: item.itinerary,
+                                  },
+                                });
+                              }}
+                            >
+                              🗺️ Xem lịch trình trên bản đồ
+                            </button>
+                          )}
                         </div>
                       )}
 
                     {/* Danh sách địa điểm cũ: chỉ hiển thị khi không có lịch trình */}
-                    {!item.itinerary && item.foodPlaces?.length > 0 && (
-                      <div className="food-ai-place-list">
-                        {item.foodPlaces.map((place) => (
-                          <div
-                            className="food-ai-place-item"
-                            key={place.id}
-                          >
-                            <strong>🍽️ {place.name}</strong>
+                    {!(
+                      item.itinerary &&
+                      Array.isArray(item.itinerary.stops) &&
+                      item.itinerary.stops.length > 0
+                    ) &&
+                      item.foodPlaces?.length > 0 && (
+                        <div className="food-ai-place-list">
+                          {item.foodPlaces.map((place, index) => (
+                            <div
+                              className="food-ai-place-item"
+                              key={place.id ?? index}
+                            >
+                              <strong>🍽️ {place.name}</strong>
 
-                            {place.address && (
-                              <p>📍 {place.address}</p>
-                            )}
+                              {place.address && <p>📍 {place.address}</p>}
 
-                            {place.district && (
-                              <p>Khu vực: {place.district}</p>
-                            )}
+                              {place.district && (
+                                <p>Khu vực: {place.district}</p>
+                              )}
 
-                            {(place.priceMin != null ||
-                              place.priceMax != null) && (
-                              <p>
-                                💰 Giá:{" "}
-                                {place.priceMin != null
-                                  ? Number(place.priceMin).toLocaleString(
-                                      "vi-VN"
-                                    )
-                                  : "?"}
-                                {" - "}
-                                {place.priceMax != null
-                                  ? Number(place.priceMax).toLocaleString(
-                                      "vi-VN"
-                                    )
-                                  : "?"}
-                                {" VNĐ"}
-                              </p>
-                            )}
+                              {(place.priceMin != null ||
+                                place.priceMax != null) && (
+                                <p>
+                                  💰 Giá:{" "}
+                                  {place.priceMin != null
+                                    ? Number(place.priceMin).toLocaleString(
+                                        "vi-VN"
+                                      )
+                                    : "?"}
+                                  {" - "}
+                                  {place.priceMax != null
+                                    ? Number(place.priceMax).toLocaleString(
+                                        "vi-VN"
+                                      )
+                                    : "?"}
+                                  {" VNĐ"}
+                                </p>
+                              )}
 
-                            {place.googleMapsUrl && (
-                              <a
-                                href={place.googleMapsUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Xem trên Google Maps
-                              </a>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                              {place.googleMapsUrl && (
+                                <a
+                                  href={place.googleMapsUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Xem trên Google Maps
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
 
                     <span>{formatTime(item.time)}</span>
                   </div>
@@ -497,8 +549,8 @@ export default function FoodPlanner() {
           </div>
 
           <p className="food-ai-note">
-            Bạn có thể mô tả khu vực, món ăn và ngân sách trực tiếp trong
-            khung chat.
+            Bạn có thể mô tả khu vực, món ăn và ngân sách trực tiếp trong khung
+            chat.
           </p>
         </aside>
       </div>
