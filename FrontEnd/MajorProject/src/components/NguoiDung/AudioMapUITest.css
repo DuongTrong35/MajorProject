@@ -1278,3 +1278,33 @@
     opacity: 0.45;
   }
 }
+
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 27px;
+
+  background: #E8F5F2;
+  color: #247C78;
+
+  border: 1px solid #B8DDD6;
+  border-radius: 40px;
+
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(36, 124, 120, 0.12);
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #247C78;
+  color: white;
+  border-color: #247C78;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(36, 124, 120, 0.25);
+}

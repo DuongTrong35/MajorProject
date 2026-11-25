@@ -302,70 +302,69 @@ function AudioMapUI() {
   //   }
   // };
 
-const speakText = async () => {
-  if (!displayDesc) return;
+  const speakText = async () => {
+    if (!displayDesc) return;
 
-  // Dừng audio cũ nếu đang phát
-  if (audioObj) {
-    audioObj.pause();
-    audioObj.currentTime = 0;
-  }
+    // Dừng audio cũ nếu đang phát
+    if (audioObj) {
+      audioObj.pause();
+      audioObj.currentTime = 0;
+    }
 
-  setIsSpeaking(true);
-  setAudioProgress(0);
+    setIsSpeaking(true);
+    setAudioProgress(0);
 
-  try {
-    const targetLangCode = langCodeMap[panelLang] || "vi";
+    try {
+      const targetLangCode = langCodeMap[panelLang] || "vi";
 
-    const audioRes = await fetch(
-      `http://localhost:8080/api/tts?text=${encodeURIComponent(
-        displayDesc
-      )}&lang=${targetLangCode}`
-    );
+      const audioRes = await fetch(
+        `http://localhost:8080/api/tts?text=${encodeURIComponent(
+          displayDesc
+        )}&lang=${targetLangCode}`
+      );
 
-    const blob = await audioRes.blob();
-    const url = URL.createObjectURL(blob);
+      const blob = await audioRes.blob();
+      const url = URL.createObjectURL(blob);
 
-    const audio = new Audio(url);
+      const audio = new Audio(url);
 
-    setAudioObj(audio);
+      setAudioObj(audio);
 
-    // Cập nhật tiến trình theo Audio thực tế
-    audio.ontimeupdate = () => {
-      if (audio.duration) {
-        const progress =
-          (audio.currentTime / audio.duration) * 100;
+      // Cập nhật tiến trình theo Audio thực tế
+      audio.ontimeupdate = () => {
+        if (audio.duration) {
+          const progress = (audio.currentTime / audio.duration) * 100;
 
-        setAudioProgress(progress);
-      }
-    };
+          setAudioProgress(progress);
+        }
+      };
 
-    // Khi bắt đầu phát
-    audio.onplay = () => {
-      setIsSpeaking(true);
-    };
+      // Khi bắt đầu phát
+      audio.onplay = () => {
+        setIsSpeaking(true);
+      };
 
-    // Khi đọc xong
-    audio.onended = () => {
-      setAudioProgress(100);
-      setIsSpeaking(false);
-      URL.revokeObjectURL(url);
-    };
+      // Khi đọc xong
+      audio.onended = () => {
+        setAudioProgress(100);
+        setIsSpeaking(false);
+        URL.revokeObjectURL(url);
+      };
 
-    // Khi có lỗi
-    audio.onerror = () => {
+      // Khi có lỗi
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        setAudioProgress(0);
+        URL.revokeObjectURL(url);
+      };
+
+      await audio.play();
+    } catch (err) {
+      console.error(err);
       setIsSpeaking(false);
       setAudioProgress(0);
-      URL.revokeObjectURL(url);
-    };
-
-    await audio.play();
-  } catch (err) {
-    console.error(err);
-    setIsSpeaking(false);
-    setAudioProgress(0);
-  }
-};
+    }
+  };
 
   // const stopSpeak = () => {
   //   window.speechSynthesis.cancel();
@@ -378,16 +377,16 @@ const speakText = async () => {
   //   setIsSpeaking(false);
   // };
   const stopSpeak = () => {
-  window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 
-  if (audioObj) {
-    audioObj.pause();
-    audioObj.currentTime = 0;
-  }
+    if (audioObj) {
+      audioObj.pause();
+      audioObj.currentTime = 0;
+    }
 
-  setIsSpeaking(false);
-  setAudioProgress(0);
-};
+    setIsSpeaking(false);
+    setAudioProgress(0);
+  };
 
   const handleSelectShop = async (id) => {
     try {
@@ -452,8 +451,7 @@ const speakText = async () => {
               className="amui-tour-item"
               onClick={() => {
                 setSelectedTour(tour);
-                    setShowTourList(false); // Tự động đóng sidebar sau khi chọn tour
-
+                setShowTourList(false); // Tự động đóng sidebar sau khi chọn tour
               }}
             >
               <b>{tour.tenTour}</b>
@@ -498,6 +496,11 @@ const speakText = async () => {
             style={{ top: "0px", left: "5px" }}
           >
             Đăng xuất
+          </button>
+
+          <button className="back-button" onClick={() => navigate("/homechoose")}>
+            <span className="back-arrow">←</span>
+            Quay lại
           </button>
           {/* 🌐 LANGUAGE */}
           {/* <div
@@ -584,24 +587,28 @@ const speakText = async () => {
           <strong>{displayDesc}</strong>
         </div> */}
         <div className={`amui-playing ${isSpeaking ? "playing" : ""}`}>
-  <div className="amui-playing-header">
-    <span>
-      {isSpeaking ? "🔊 ĐANG ĐỌC" : audioProgress === 100 ? "✓ ĐÃ ĐỌC XONG" : "🎧 SẴN SÀNG"}
-    </span>
+          <div className="amui-playing-header">
+            <span>
+              {isSpeaking
+                ? "🔊 ĐANG ĐỌC"
+                : audioProgress === 100
+                ? "✓ ĐÃ ĐỌC XONG"
+                : "🎧 SẴN SÀNG"}
+            </span>
 
-    <small>{Math.round(audioProgress)}%</small>
-  </div>
+            <small>{Math.round(audioProgress)}%</small>
+          </div>
 
-  <strong>{displayDesc}</strong>
+          <strong>{displayDesc}</strong>
 
-  {/* Thanh tiến trình */}
-  <div className="amui-progress">
-    <div
-      className="amui-progress-bar"
-      style={{ width: `${audioProgress}%` }}
-    />
-  </div>
-</div>
+          {/* Thanh tiến trình */}
+          <div className="amui-progress">
+            <div
+              className="amui-progress-bar"
+              style={{ width: `${audioProgress}%` }}
+            />
+          </div>
+        </div>
         <button className="amui-start-btn" onClick={startSimulation}>
           ▶ Bắt đầu
         </button>{" "}

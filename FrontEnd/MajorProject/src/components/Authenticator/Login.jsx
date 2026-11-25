@@ -59,7 +59,7 @@ function Login() {
       } else if (data.role === "ADMIN") {
         navigate("/admin");
       } else {
-        navigate("/mhuser");
+        navigate("/homechoose");
       }
     } catch (error) {
       alert("Lỗi kết nối server!");
