@@ -388,11 +388,12 @@ export default function FoodPlanner() {
                               type="button"
                               className="food-ai-map-button"
                               onClick={() => {
-                                navigate("/audio-map", {
-                                  state: {
-                                    itinerary: item.itinerary,
-                                  },
-                                });
+                                localStorage.setItem(
+                                  "foodTourItinerary",
+                                  JSON.stringify(item.itinerary)
+                                );
+
+                                window.open("/audio-map", "_blank");
                               }}
                             >
                               🗺️ Xem lịch trình trên bản đồ

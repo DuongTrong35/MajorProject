@@ -73,10 +73,23 @@ const EMPTY_STOPS = [];
 
 function AudioMapAI() {
   const navigate = useNavigate();
+  // const location = useLocation();
   const location = useLocation();
+
+  const itineraryFromChat = useMemo(() => {
+    if (location.state?.itinerary) {
+      return location.state.itinerary;
+    }
+
+    try {
+      return JSON.parse(localStorage.getItem("foodTourItinerary") || "null");
+    } catch {
+      return null;
+    }
+  }, [location.state]);
   const shopIdFromQR = location.state?.shopId;
 
-  const itineraryFromChat = location.state?.itinerary;
+  // const itineraryFromChat = location.state?.itinerary;
 
   const itineraryStops = itineraryFromChat?.stops ?? EMPTY_STOPS;
 

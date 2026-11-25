@@ -1088,23 +1088,44 @@ public class ChatService {
 // NHẬN DIỆN YÊU CẦU LẬP FOOD TOUR
 // =====================================
 
+    // =====================================
+// NHẬN DIỆN YÊU CẦU LẬP FOOD TOUR
+// =====================================
+
     private boolean isFoodTourRequest(String message) {
 
         return containsPhrase(
                 message,
+
+                // Food Tour
                 "food tour",
+                "foodtour",
                 "tour an uong",
                 "tour am thuc",
-                "lich trinh an uong",
-                "lich trinh food tour",
+                "di an tour",
+                "di tour an uong",
+
+                // Lập lịch trình
+                "lich trinh",
                 "lap lich trinh",
                 "sap xep lich trinh",
+                "tao lich trinh",
+                "xay dung lich trinh",
+
+                // Hành trình
                 "hanh trinh an uong",
-                "di an tour",
-                "di tour an uong"
+                "cuoc hanh trinh",
+                "hanh trinh",
+                "lap hanh trinh",
+                "tao hanh trinh",
+                "xay dung hanh trinh",
+
+                // Chuyến đi
+                "chuyen di an uong",
+                "lap chuyen di",
+                "tao chuyen di"
         );
     }
-
     // =====================================
 // XỬ LÝ LẬP LỊCH TRÌNH FOOD TOUR
 // =====================================
