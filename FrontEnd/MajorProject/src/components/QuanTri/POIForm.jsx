@@ -20,11 +20,26 @@ L.Icon.Default.mergeOptions({
 
 // Languages
 const ALL_LANGUAGES = [
-  "Vietnamese", "English", "Spanish", "French",
-  "German", "Italian", "Portuguese", "Russian",
-  "Chinese (Simplified)", "Japanese", "Korean", "Thai",
-  "Indonesian", "Filipino", "Malay", "Burmese",
-  "Khmer", "Lao", "Turkish", "Polish"
+  "Vietnamese",
+  "English",
+  "Spanish",
+  "French",
+  "German",
+  "Italian",
+  "Portuguese",
+  "Russian",
+  "Chinese (Simplified)",
+  "Japanese",
+  "Korean",
+  "Thai",
+  "Indonesian",
+  "Filipino",
+  "Malay",
+  "Burmese",
+  "Khmer",
+  "Lao",
+  "Turkish",
+  "Polish",
 ];
 
 // Map click
@@ -80,18 +95,31 @@ function POIForm({ isOpen, onClose, onSave }) {
     setForm({ ...form, [name]: value });
   };
 
-  const handleCheckbox = (lang) => {
-    setForm((prev) => {
-      const exists = prev.languages.includes(lang);
-      return {
-        ...prev,
-        languages: exists
-          ? prev.languages.filter((l) => l !== lang)
-          : [...prev.languages, lang],
-      };
-    });
-  };
+  // const handleCheckbox = (lang) => {
+  //   setForm((prev) => {
+  //     const exists = prev.languages.includes(lang);
+  //     return {
+  //       ...prev,
+  //       languages: exists
+  //         ? prev.languages.filter((l) => l !== lang)
+  //         : [...prev.languages, lang],
+  //     };
+  //   });
+  // };
 
+ const handleCheckbox = (lang) => {
+  setForm((prev) => {
+    const isSelected = prev.languages.includes(lang);
+
+    return {
+      ...prev,
+      languages: isSelected
+        ? prev.languages.filter((item) => item !== lang)
+        : [...prev.languages, lang],
+    };
+  });
+};
+  
   const handleSubmit = async () => {
     try {
       let thumbnailName = "";
@@ -102,10 +130,13 @@ function POIForm({ isOpen, onClose, onSave }) {
         const fd = new FormData();
         fd.append("file", form.thumbnail);
 
-        const res = await fetch("http://localhost:8080/api/cuahang/upload-image", {
-          method: "POST",
-          body: fd,
-        });
+        const res = await fetch(
+          "http://localhost:8080/api/cuahang/upload-image",
+          {
+            method: "POST",
+            body: fd,
+          }
+        );
 
         thumbnailName = await res.text();
       }
@@ -115,10 +146,13 @@ function POIForm({ isOpen, onClose, onSave }) {
         const fd = new FormData();
         fd.append("file", form.banner);
 
-        const res = await fetch("http://localhost:8080/api/cuahang/upload-image", {
-          method: "POST",
-          body: fd,
-        });
+        const res = await fetch(
+          "http://localhost:8080/api/cuahang/upload-image",
+          {
+            method: "POST",
+            body: fd,
+          }
+        );
 
         bannerName = await res.text();
       }
@@ -132,7 +166,7 @@ function POIForm({ isOpen, onClose, onSave }) {
         },
         body: JSON.stringify({
           id: form.id || null, // ✅ QUAN TRỌNG
-iduser: user?.id,
+          iduser: user?.id,
           ten: form.name,
           danhmuc: form.category,
           diaChi: form.address,
@@ -158,7 +192,6 @@ iduser: user?.id,
 
       onSave(data);
       onClose();
-
     } catch (err) {
       console.error(err);
       alert("Lỗi khi lưu!");
@@ -166,9 +199,10 @@ iduser: user?.id,
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-
+    // <div className="modal-overlay">
+    //   <div className="modal">
+    <div className="poi-modal-overlay">
+      <div className="poi-modal">
         {/* HEADER */}
         <div className="modal-header">
           <h2>Thêm POI mới</h2>
@@ -176,10 +210,8 @@ iduser: user?.id,
         </div>
 
         <div className="form-step">
-
           {/* LEFT */}
           <div className="left">
-
             {/* ✅ MÃ CỬA HÀNG */}
             <label>Mã cửa hàng</label>
             <input
@@ -193,13 +225,25 @@ iduser: user?.id,
             <input name="name" value={form.name} onChange={handleChange} />
 
             <label>Danh mục</label>
-            <input name="category" value={form.category} onChange={handleChange} />
+            <input
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+            />
 
             <label>Mô tả</label>
-            <textarea name="description" value={form.description} onChange={handleChange} />
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+            />
 
             <label>Địa chỉ</label>
-            <input name="address" value={form.address} onChange={handleChange} />
+            <input
+              name="address"
+              value={form.address}
+              onChange={handleChange}
+            />
 
             <label>Bán kính</label>
             <input name="radius" value={form.radius} onChange={handleChange} />
@@ -207,7 +251,6 @@ iduser: user?.id,
 
           {/* RIGHT */}
           <div className="right">
-
             {/* MAP */}
             <div className="map-container">
               <MapContainer
@@ -275,17 +318,25 @@ iduser: user?.id,
               <div className="language-header">
                 <span>🟢 NGÔN NGỮ</span>
                 <div>
-                  <button onClick={() => setForm(prev => ({
-                    ...prev,
-                    languages: ALL_LANGUAGES
-                  }))}>
+                  <button
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        languages: ALL_LANGUAGES,
+                      }))
+                    }
+                  >
                     Chọn tất cả
                   </button>
 
-                  <button onClick={() => setForm(prev => ({
-                    ...prev,
-                    languages: []
-                  }))}>
+                  <button
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        languages: [],
+                      }))
+                    }
+                  >
                     Bỏ chọn
                   </button>
                 </div>
@@ -304,7 +355,6 @@ iduser: user?.id,
                 ))}
               </div>
             </div>
-
           </div>
         </div>
 
@@ -318,7 +368,6 @@ iduser: user?.id,
             ✨ Sinh nội dung đa ngôn ngữ
           </button>
         </div>
-
       </div>
     </div>
   );

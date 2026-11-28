@@ -37,8 +37,8 @@ function POIFix({ isOpen, onClose, onSave, poi }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
+    <div className="poi-modal-overlay">
+      <div className="poi-modal">
 
         {/* HEADER */}
         <div className="modal-header">

@@ -92,27 +92,26 @@ function TrangChuQT() {
       </aside>
 
       {/* MAIN */}
-      <div className="cuahang-main home-banner">
+      <div className="cuahang-main home-banner" style={{padding:"0"}}>
 
         {/* ẢNH BACKGROUND */}
         <img
-          src={`/images/Store/${store.imageBanner || store.imageThumbnail}`}
+          src={`/images/Store/adminpng.png`}
           alt="banner"
         />
 
         {/* OVERLAY */}
-        <div className="home-overlay">
+        {/* <div className="home-overlay">
           <h1>{store.ten}</h1>
           <p>📍 {store.diaChi}</p>
           <p>{store.moTa}</p>
 
-          {/* THÊM INFO NHỎ */}
           <div className="extra-info">
             <span>📂 {store.danhmuc}</span>
             <span>🌐 {store.ngonngu}</span>
             <span>📏 {store.bankinh} m</span>
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>

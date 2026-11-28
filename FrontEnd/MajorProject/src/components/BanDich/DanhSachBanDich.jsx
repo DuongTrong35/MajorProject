@@ -8,7 +8,7 @@ const navItems = [
   { to: "/store", label: "Thông tin cửa hàng", icon: "🏪" },
   { to: "/store/bandich", label: "Danh sách bản dịch", icon: "👨‍💻" },
   { to: "/voice", label: "Danh sách giọng đọc", icon: "🎤" },
-  { to: "/thongke", label: "Thống kê", icon: "📊" },
+  // { to: "/thongke", label: "Thống kê", icon: "📊" },
 ];
 
 function DanhSachBanDich() {

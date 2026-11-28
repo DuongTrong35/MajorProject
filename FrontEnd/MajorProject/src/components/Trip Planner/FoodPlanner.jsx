@@ -501,7 +501,7 @@ export default function FoodPlanner() {
         </section>
 
         {/* Sidebar */}
-        <aside className="food-ai-filter">
+        {/* <aside className="food-ai-filter">
           <h3>▼ Tạo lộ trình nhanh</h3>
 
           <div className="food-ai-option">
@@ -553,7 +553,7 @@ export default function FoodPlanner() {
             Bạn có thể mô tả khu vực, món ăn và ngân sách trực tiếp trong khung
             chat.
           </p>
-        </aside>
+        </aside> */}
       </div>
     </div>
   );

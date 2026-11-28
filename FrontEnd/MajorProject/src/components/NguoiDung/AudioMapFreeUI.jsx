@@ -423,12 +423,12 @@ else {
             🎯
           </button>
 
-          <button
+          {/* <button
             className="amui-btn-icon active"
             onClick={() => navigate("/scan")}
           >
             🔳
-          </button>
+          </button> */}
         </div>
         <button
           className="amui-back-floating"

@@ -15,6 +15,7 @@
 
 /* lớp overlay làm tối ảnh */
 .home-banner::after {
+  display: none;
   content: "";
   position: absolute;
   top: 0;

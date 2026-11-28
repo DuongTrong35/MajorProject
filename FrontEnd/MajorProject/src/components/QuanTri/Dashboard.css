@@ -337,3 +337,31 @@ body {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* FIX BADGE - DANH MỤC POI */
+.card-img .badge {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 999 !important;
+
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  padding: 7px 14px !important;
+
+  background-color: #ff8c42 !important;
+  color: #ffffff !important;
+
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+
+  border: none !important;
+  border-radius: 20px !important;
+
+  white-space: nowrap !important;
+  text-transform: capitalize;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}

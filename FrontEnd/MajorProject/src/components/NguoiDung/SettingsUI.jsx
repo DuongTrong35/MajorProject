@@ -214,7 +214,8 @@ function SettingsUI() {
           <div className="settings-card device-detail">
             <div className="info-row">
               <span>Device ID</span>
-              <strong>{deviceInfo.deviceId}</strong>
+              {/* <strong>{deviceInfo.deviceId}</strong> */}
+              <strong>EA7583CD-A667-48BC-B806-42ECB2B48606</strong>
             </div>
 
             <div className="info-row">
@@ -285,7 +286,7 @@ function SettingsUI() {
               của nhà hàng một cách nhanh chóng và chuyên nghiệp.
             </p>
 
-            <button className="partner-btn">Khám phá ngay →</button>
+            {/* <button className="partner-btn">Khám phá ngay →</button> */}
           </div>
 
           <div className="partner-icon">
@@ -294,7 +295,7 @@ function SettingsUI() {
         </div>
 
         {/* Payment */}
-        <div className="settings-card">
+        {/* <div className="settings-card">
           <div className="info-row">
             <div>
               <h3>Xem hóa đơn</h3>
@@ -303,7 +304,7 @@ function SettingsUI() {
 
             <div className="icon dark">🧾</div>
           </div>
-        </div>
+        </div> */}
 
         {/* Buttons */}
         <button className="save-btn">Lưu cài đặt</button>

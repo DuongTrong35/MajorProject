@@ -708,7 +708,7 @@ function AudioMapAI() {
           )}
         </MapContainer>
         <div className="amui-map-overlay">GPS đang bật</div>
-        <div className="amui-bottom-right-controls" style={{ zIndex: 2000 }}>
+        {/* <div className="amui-bottom-right-controls" style={{ zIndex: 2000 }}>
           <button className="amui-btn-icon" onClick={handleLocateUser}>
             🎯
           </button>
@@ -719,7 +719,7 @@ function AudioMapAI() {
           >
             🔳
           </button>
-        </div>
+        </div> */}
         <button
           className="amui-back-floating"
           onClick={() => navigate("/mhuser")}

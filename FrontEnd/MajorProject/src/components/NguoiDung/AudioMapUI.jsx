@@ -47,7 +47,7 @@ function RecenterMap({ position }) {
 function AudioMapUI() {
   const navigate = useNavigate();
   // const [position, setPosition] = useState([10.761992635455506, 106.7022316837637]);
-  const [position, setPosition] = useState([10.76, 106.7]);
+  const [position, setPosition] = useState([10.760132404786873, 106.68214158059773]);
   const [showLang, setShowLang] = useState(false);
   const [shop, setShop] = useState(null);
   const [route, setRoute] = useState([]);

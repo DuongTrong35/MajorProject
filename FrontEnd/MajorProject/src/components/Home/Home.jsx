@@ -11,7 +11,7 @@ import icon3 from "../../assets/images/icon-3.png";
 import icon4 from "../../assets/images/icon-4.png";
 import testi1 from "../../assets/images/testi1.jpg";
 import testi2 from "../../assets/images/testi2.jpg";
-import testi3 from "../../assets/images/testi3.jpg";
+import testi3 from "../../assets/images/borucook.png";
 import c1 from "../../assets/images/a1.png";
 import c2 from "../../assets/images/a2.png";
 import c3 from "../../assets/images/a3.png";
@@ -528,7 +528,7 @@ export default function Home() {
                       </q>
                     </blockquote>
 
-                    <div className="source">- Thu Hà</div>
+                    <div className="source">Boruto</div>
                   </li>
 
                   <li className="anim4">

@@ -88,7 +88,7 @@
   max-width: 1400px;
   margin: 0 auto;
 
-  display: grid;
+  /* display: grid; */
   grid-template-columns: minmax(0, 1fr) 310px;
   align-items: start;
   gap: 24px;
